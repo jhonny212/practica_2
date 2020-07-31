@@ -1,0 +1,55 @@
+import java_cup.runtime.Symbol;
+parser code {:
+   public void syntax_error(Symbol s){
+       System.out.println("Error R de sintaxis: "+ s.value +" Linea "+(s.left+1)+" columna "+(s.right+1) );
+    }
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
+    System.out.println("La Cadena:" +s.value+" en la Linea:"+(s.right+1) +" ,Columna: "+s.left+"esta fuera de contexto." );
+ }
+:}
+
+
+terminal Integer num;
+terminal dat,ERR;
+non-terminal Double S,E,Z,H;
+non-terminal Double N,Y;
+start with S;
+
+S::= E:e
+{:
+System.out.println("El valor en decimal es de "+e);
+:};
+E::= H:e dat N:e1
+{:
+RESULT=e+e1;
+:}
+| H:e {:RESULT=e;:};
+
+H::= H:e Z:e1
+{:
+RESULT=(2*e)+e1;
+:}
+| Z:e
+{:RESULT=e;:};
+
+Z::= num:e
+{:RESULT=Double.parseDouble(String.valueOf(e));:};
+
+N::= Y:e
+{:
+RESULT=e/2;
+:};
+Y::= Z:e Y:e1
+{:
+RESULT=e+(0.5*e1);
+:}
+| Z:e
+{:
+
+RESULT=e;
+:};
+
+
+
+
+
